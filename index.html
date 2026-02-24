@@ -13,6 +13,7 @@ body{
  font-family:Arial;
  margin:0;
  overflow:hidden;
+ cursor:none;
 }
 
 .header{
@@ -124,6 +125,7 @@ body{
 let current=0;
 const tabs=document.querySelectorAll(".tab");
 const pages=document.querySelectorAll(".page");
+document.body.style.cursor="none";
 window.onload = function () {
   setTimeout(()=>{
     const first=document.querySelector(".app");
