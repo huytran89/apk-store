@@ -3,7 +3,7 @@
 	<head>
 	<meta charset='utf-8'>
 	<meta name='viewport' content='width=device-width'>
-	<title>HT Store 3</title>
+	<title>HT Store 4</title>
 
 	<style>
 *{box-sizing:border-box}
@@ -150,7 +150,7 @@ a:focus{
 	<body>
 
 	<div class="header">
-		HT Store 3
+		HT Store 4
 		<div class="sub">🔒Chỉ dùng cá nhân giúp hệ thống luôn ổn định và hoạt động lâu dài</div>
 	</div>
 
@@ -265,6 +265,97 @@ document.addEventListener("DOMContentLoaded", function () {
             this.focus();
         }
     });
+});
+</script>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    document.addEventListener("keydown", function (e) {
+        const keys = ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"];
+
+        if (!keys.includes(e.key)) return;
+
+        const active = document.activeElement;
+
+        // Do not hijack the arrow keys while typing in the search box.
+        if (active && active.id === "search") return;
+
+        const visibleApps = Array.from(
+            document.querySelectorAll(".app-grid a")
+        ).filter(function (app) {
+            return app.style.display !== "none" &&
+                   app.offsetParent !== null;
+        });
+
+        if (!visibleApps.length) return;
+
+        const currentIndex = visibleApps.indexOf(active);
+
+        // If nothing is focused, start at the first visible app.
+        if (currentIndex === -1) {
+            e.preventDefault();
+            visibleApps[0].focus();
+            visibleApps[0].scrollIntoView({
+                behavior: "smooth",
+                block: "center"
+            });
+            return;
+        }
+
+        const current = visibleApps[currentIndex];
+        const rect = current.getBoundingClientRect();
+        let best = null;
+        let bestScore = Infinity;
+
+        visibleApps.forEach(function (candidate, index) {
+            if (candidate === current) return;
+
+            const r = candidate.getBoundingClientRect();
+            let valid = false;
+            let score = Infinity;
+
+            if (e.key === "ArrowRight" && r.left > rect.right - 5) {
+                valid = true;
+                score = (r.left - rect.right) * 10 +
+                        Math.abs(r.top - rect.top);
+            }
+
+            if (e.key === "ArrowLeft" && r.right < rect.left + 5) {
+                valid = true;
+                score = (rect.left - r.right) * 10 +
+                        Math.abs(r.top - rect.top);
+            }
+
+            if (e.key === "ArrowDown" && r.top > rect.bottom - 5) {
+                valid = true;
+                score = (r.top - rect.bottom) * 10 +
+                        Math.abs(r.left - rect.left);
+            }
+
+            if (e.key === "ArrowUp" && r.bottom < rect.top + 5) {
+                valid = true;
+                score = (rect.top - r.bottom) * 10 +
+                        Math.abs(r.left - rect.left);
+            }
+
+            if (valid && score < bestScore) {
+                bestScore = score;
+                best = candidate;
+            }
+        });
+
+        if (best) {
+            e.preventDefault();
+            best.focus();
+            best.scrollIntoView({
+                behavior: "smooth",
+                block: "center"
+            });
+        }
+    });
+
 });
 </script>
 
