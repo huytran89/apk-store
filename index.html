@@ -3,7 +3,7 @@
 	<head>
 	<meta charset='utf-8'>
 	<meta name='viewport' content='width=device-width'>
-	<title>HT Store 2</title>
+	<title>HT Store 3</title>
 
 	<style>
 *{box-sizing:border-box}
@@ -150,7 +150,7 @@ a:focus{
 	<body>
 
 	<div class="header">
-		HT Store 2
+		HT Store 3
 		<div class="sub">🔒Chỉ dùng cá nhân giúp hệ thống luôn ổn định và hoạt động lâu dài</div>
 	</div>
 
@@ -214,53 +214,58 @@ a:focus{
 <a href='https://github.com/huytran89/apk-store-v2/releases/latest/download/vpnvn.apk' tabindex='0'><span class='icon'>📦</span> vpnvn</a>
 <a href='https://github.com/huytran89/apk-store-v2/releases/latest/download/zicvpn.apk' tabindex='0'><span class='icon'>📦</span> zicvpn <span class='ver'>v0.0.1</span></a></div>
 
-<script>
-(function () {
-    const search = document.getElementById("search");
-    if (!search) return;
 
-    function updateSearch() {
-        const keyword = search.value.trim().toLocaleLowerCase("vi");
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const search = document.getElementById("search");
+
+    search.addEventListener("input", function () {
+        const keyword = this.value.toLowerCase().trim();
 
         document.querySelectorAll(".app-grid").forEach(function (grid) {
-            let count = 0;
+            let found = 0;
 
             grid.querySelectorAll("a").forEach(function (app) {
-                const text = app.textContent.toLocaleLowerCase("vi");
-                const show = keyword === "" || text.indexOf(keyword) !== -1;
+                const text = app.textContent.toLowerCase();
 
-                app.hidden = !show;
-                if (show) count++;
+                if (keyword === "" || text.includes(keyword)) {
+                    app.style.display = "flex";
+                    found++;
+                } else {
+                    app.style.display = "none";
+                }
             });
 
-            grid.hidden = count === 0;
             const category = grid.previousElementSibling;
 
             if (category && category.classList.contains("category")) {
-                category.hidden = count === 0;
+                category.style.display = found > 0 ? "block" : "none";
             }
+
+            grid.style.display = found > 0 ? "grid" : "none";
         });
-    }
-
-    search.addEventListener("input", updateSearch);
-    search.addEventListener("keyup", updateSearch);
-    search.addEventListener("search", updateSearch);
-
-    search.addEventListener("keydown", function (e) {
-        if (e.key === "Escape") {
-            search.value = "";
-            updateSearch();
-            search.focus();
-        }
-
-        if (e.key === "Enter") {
-            const first = document.querySelector(".app-grid:not([hidden]) a:not([hidden])");
-            if (first) first.focus();
-        }
     });
 
-    updateSearch();
-})();
+    search.addEventListener("keydown", function (e) {
+        if (e.key === "Enter") {
+            const first = document.querySelector(
+                ".app-grid[style*='display: grid'] a[style*='display: flex']"
+            );
+
+            if (first) {
+                first.focus();
+            }
+        }
+
+        if (e.key === "Escape") {
+            this.value = "";
+            this.dispatchEvent(new Event("input"));
+            this.focus();
+        }
+    });
+});
 </script>
 
 </body></html>
